@@ -1,0 +1,531 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/vouchers": {
+      "post": {
+        "tags": [
+          "vouchers"
+        ],
+        "summary": "Create Vouchers",
+        "description": "Create multiple vouchers in a single request. This endpoint is fail-fast: the whole request is rejected if any item is invalid. Max items: 50.",
+        "operationId": "create_vouchers_v1_vouchers_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VoucherCreateRequest"
+                },
+                "maxItems": 50,
+                "minItems": 1,
+                "title": "Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VoucherResponse"
+                  },
+                  "title": "Response Create Vouchers V1 Vouchers Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "vouchers"
+        ],
+        "summary": "Get Vouchers",
+        "description": "List vouchers with pagination. Max page size: 100.",
+        "operationId": "get_vouchers_v1_vouchers_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 100,
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VoucherResponse"
+                  },
+                  "title": "Response Get Vouchers V1 Vouchers Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "vouchers"
+        ],
+        "summary": "Update Vouchers",
+        "description": "Update multiple vouchers in a single request. Fail-fast: the whole request is rejected if any item is invalid or not found. Max items: 50.",
+        "operationId": "update_vouchers_v1_vouchers_patch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VoucherUpdateRequest"
+                },
+                "maxItems": 50,
+                "minItems": 1,
+                "title": "Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VoucherResponse"
+                  },
+                  "title": "Response Update Vouchers V1 Vouchers Patch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "One or more provided vouchers not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vouchers/delete": {
+      "post": {
+        "tags": [
+          "vouchers"
+        ],
+        "summary": "Delete Vouchers",
+        "description": "Delete vouchers by code. Fail-fast: the whole request is rejected if any code is invalid or not found. Max items: 100.",
+        "operationId": "delete_vouchers_v1_vouchers_delete_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 100,
+                "minItems": 1,
+                "uniqueItems": true,
+                "title": "Codes"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "404": {
+            "description": "One or more provided vouchers not found"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/v1/vouchers/deactivate": {
+      "patch": {
+        "tags": [
+          "vouchers"
+        ],
+        "summary": "Deactivate Vouchers",
+        "description": "Deactivate vouchers by code. Fail-fast: the whole request is rejected if any code is invalid or not found. Max items: 100.",
+        "operationId": "deactivate_vouchers_v1_vouchers_deactivate_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 100,
+                "minItems": 1,
+                "uniqueItems": true,
+                "title": "Codes"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "404": {
+            "description": "One or more provided vouchers not found"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/v1/vouchers/{code}": {
+      "get": {
+        "tags": [
+          "vouchers"
+        ],
+        "summary": "Get Voucher By Code",
+        "operationId": "get_voucher_by_code_v1_vouchers__code__get",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoucherResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Voucher not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VoucherCreateRequest": {
+        "properties": {
+          "discount_percentage": {
+            "type": "integer",
+            "title": "Discount Percentage",
+            "description": "Discount percentage (1-100)."
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until",
+            "description": "Voucher expiration date. If omitted, defaults to now + 365 days. Naive datetimes are treated as UTC. Must be > now and <= now + 365 days."
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VoucherStatus"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Voucher status. Defaults to active if omitted."
+          }
+        },
+        "type": "object",
+        "required": [
+          "discount_percentage"
+        ],
+        "title": "VoucherCreateRequest",
+        "description": "Request model for creating vouchers.",
+        "examples": [
+          {
+            "discount_percentage": 15,
+            "status": "active",
+            "valid_until": "2026-12-31T23:59:59Z"
+          }
+        ]
+      },
+      "VoucherResponse": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "Voucher unique code"
+          },
+          "discount_percentage": {
+            "type": "integer",
+            "title": "Discount Percentage",
+            "description": "Discount percentage"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Valid Until",
+            "description": "Voucher expiration date (UTC)."
+          },
+          "status": {
+            "$ref": "#/components/schemas/VoucherStatus",
+            "description": "Voucher active status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Voucher creation date"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "Voucher last update date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "discount_percentage",
+          "valid_until",
+          "status",
+          "created_at"
+        ],
+        "title": "VoucherResponse",
+        "description": "Response model for voucher data.",
+        "examples": [
+          {
+            "code": "a1b2c3d4e5f6",
+            "created_at": "2026-02-27T10:00:00Z",
+            "discount_percentage": 15,
+            "status": "active",
+            "valid_until": "2026-12-31T23:59:59Z"
+          }
+        ]
+      },
+      "VoucherStatus": {
+        "type": "string",
+        "enum": [
+          "inactive",
+          "active"
+        ],
+        "title": "VoucherStatus"
+      },
+      "VoucherUpdateRequest": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "Voucher unique code"
+          },
+          "discount_percentage": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Discount Percentage",
+            "description": "Discount percentage (1-100)."
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until",
+            "description": "Voucher expiration date. Naive datetimes are treated as UTC. Must be > now and <= now + 365 days."
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VoucherStatus"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Voucher active status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "title": "VoucherUpdateRequest",
+        "description": "Request model for updating vouchers. At least one field must be provided.",
+        "examples": [
+          {
+            "code": "a1b2c3d4e5f6",
+            "discount_percentage": 20
+          }
+        ]
+      }
+    }
+  }
+}
