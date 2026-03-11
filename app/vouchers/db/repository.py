@@ -53,8 +53,9 @@ class AsyncVoucherRepository:
 
     async def add_many(self, vouchers: Iterable[Voucher]) -> None:
         async with self._session_factory() as session:
-            for voucher in vouchers:
-                await session.merge(self._to_orm(voucher))
+            session.add_all(
+                map(self._to_orm, vouchers)
+            )  # synchronous, but the SQL is not executed until commit
             await session.commit()
 
     async def get_many(
@@ -77,16 +78,17 @@ class AsyncVoucherRepository:
             return [self._to_model(row) for row in result.scalars().all()]
 
     async def delete_many(self, codes: list[str]) -> None:
+        if not codes:
+            return
+
         async with self._session_factory() as session:
-            if not codes:
-                return
             result = await session.execute(
                 select(VoucherORM.code).where(VoucherORM.code.in_(codes))
             )
             existing = {row for row, in result.all()}
             missing = [code for code in codes if code not in existing]
             if missing:
-                raise ValueError(f"Voucher with code {missing[0]} not found")
+                raise ValueError(f"Vouchers with codes {missing} not found")
             await session.execute(delete(VoucherORM).where(VoucherORM.code.in_(codes)))
             await session.commit()
 
