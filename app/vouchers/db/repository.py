@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Iterable
 
+from anyio.functools import lru_cache
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
@@ -133,5 +134,6 @@ class AsyncVoucherRepository:
             return updated_models
 
 
+@lru_cache(maxsize=1)
 async def get_repo() -> AsyncVoucherRepository:
     return AsyncVoucherRepository(engine)
