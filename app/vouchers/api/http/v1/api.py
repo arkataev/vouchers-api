@@ -127,16 +127,10 @@ async def deactivate_vouchers(
         ).to_model()
         for code in codes
     ]
-
-    existing_vouchers = await repo.get_many(codes)
-
-    if len(existing_vouchers) != len(patches):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="One or more provided vouchers not found",
-        )
-
-    await repo.update_many(patches)
+    try:
+        await repo.update_many(patches)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
 @router.get(

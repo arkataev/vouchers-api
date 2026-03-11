@@ -13,7 +13,7 @@ class VoucherCreateRequest(BaseModel):
     valid_until: Optional[datetime] = Field(
         description=(
             f"Voucher expiration date. If omitted, defaults to now + {Voucher.MAX_VALIDITY_DAYS} days. "
-            "Naive datetimes are treated as UTC. Must be > now and <= now + {Voucher.MAX_VALIDITY_DAYS} days."
+            f"Naive datetimes are treated as UTC. Must be > now and <= now + {Voucher.MAX_VALIDITY_DAYS} days."
         ),
         default=None,
         exclude_if=lambda v: v is None,
